@@ -1,0 +1,13 @@
+Press ctrl + alt + f1 to eneter command line interface
+
+Login using username and password
+
+Type the following command
+
+mv .Xauthority .Xauthority.bak
+
+exit
+
+Press ctrl + alt + f7 to enter login screen
+
+You should be able to login now
