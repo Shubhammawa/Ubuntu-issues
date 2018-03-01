@@ -1,0 +1,44 @@
+Getting a "grub>" prompt instead of the usual options to load different os
+
+Following is a fix which worked for me-
+
+grub> set pager=1
+
+Type ls to list all partitions that GRUB sees
+
+grub> ls
+(hd0) (hd0,gpt8) (hd0,gpt7) (hd0,gpt6)....(hd0,gpt1)            // You will see something like this
+
+If you see msdos instead of gpt it means that your system has the old-style MS-DOS partition table
+
+Use the ls command to see what files are on your system. Omit the gpt or msdos labels and just use the number in the next commmand.
+
+grub> ls (hd0,1)/
+
+lost+found/ bin/ boot/ cdrom/ ... /lib64 / media/ root/ .....initrd.img init.img.old
+
+If you find something like this written it means we have found the root filesystem. Use the above commands on different partition 
+to see which partition is the root filesystem in your system.
+
+You can read any file on the system using the cat command
+
+grub> cat (hd0,1)/etc/issue
+Ubuntu 14.04 LTS \n \l                  
+
+Now:
+
+grub> set root=(hd0,1)                            // Enter the partition number according to your system (root)
+grub> linux /boot/vmlinuz-4.4.0-31-generic root=/dev/sdX
+// Type until /boot/vmli and then press to TAB to complete the sentence
+// In place of X you have to write the partition number 
+// hd0,1  = sda1    hd0,2 = sda2    hd1,3 = sdb3    hd3,2 = sdd2  and so on
+
+grub> initrd /boot/initrd.img-4.4.0-31-generic
+grub> boot
+
+
+After successfully booting your system, run these commands to fix GRUB permanently
+
+sudo update-grub
+
+sudo grub-install /dev/sda
